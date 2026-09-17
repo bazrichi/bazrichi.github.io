@@ -728,6 +728,64 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
   #entry,#entry *,#site,#site *{cursor:auto!important}
 }
 
+
+@media only screen and (max-width:700px) and (orientation:portrait){
+  #site{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;overflow:hidden!important}
+
+  /* fixed portrait menu: it never scrolls with Journal */
+  .header{
+    position:fixed!important;left:2vw!important;right:2vw!important;top:46.5dvh!important;
+    width:96vw!important;height:6dvh!important;z-index:1000!important;
+    display:flex!important;align-items:center!important;justify-content:space-between!important;
+    transform:none!important;pointer-events:auto!important
+  }
+  .header .navitem{
+    position:static!important;flex:0 0 auto!important;width:auto!important;height:44px!important;
+    min-height:44px!important;display:flex!important;align-items:center!important;justify-content:center!important;
+    margin:0!important;padding:0!important;transform:none!important;font-size:3.45vw!important;
+    line-height:1!important;letter-spacing:.035em!important;white-space:nowrap!important;z-index:1001!important
+  }
+
+  /* fixed main-page artwork behind all section content */
+  #isle,#isleText,.isle,.isle-text{
+    display:block!important;visibility:visible!important;opacity:1!important;position:absolute!important;
+    left:2vw!important;top:4dvh!important;font-size:35vw!important;line-height:.78!important;
+    transform:none!important;z-index:4!important;color:#fff!important
+  }
+  #of,.of{
+    display:block!important;visibility:visible!important;opacity:1!important;position:absolute!important;
+    left:3vw!important;top:25.5dvh!important;font-size:34vw!important;line-height:.8!important;
+    transform:none!important;z-index:4!important;color:#fff!important
+  }
+  #heart,#heartIcon,.heart,.heart-icon{
+    display:block!important;visibility:visible!important;opacity:1!important;position:absolute!important;
+    left:auto!important;right:7vw!important;top:27dvh!important;bottom:auto!important;
+    width:30vw!important;height:30vw!important;transform:none!important;z-index:4!important
+  }
+
+  /* only Journal content scrolls */
+  #journalOverlay{
+    position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+    overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;
+    box-sizing:border-box!important;padding:7dvh 4vw 8dvh!important;z-index:40!important;
+    background:transparent!important;transform:none!important
+  }
+  #journalWriter,.journal-window,.jw-window{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:92vw!important;height:43dvh!important;margin:0 auto 7dvh!important;transform:none!important;z-index:42!important
+  }
+  #journalGallery{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:92vw!important;height:52dvh!important;margin:0 auto 3dvh!important;transform:none!important;z-index:42!important
+  }
+  #journalOverlay .journal-month-nav{
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:92vw!important;margin:1dvh auto 7dvh!important;z-index:42!important
+  }
+
+  #cleanFilm{z-index:45!important}
+}
+
 </style>
 </head>
 <body>
