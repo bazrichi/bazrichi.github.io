@@ -616,6 +616,100 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
   #entry,#entry *,#site,#site *{cursor:auto!important}
 }
 
+
+/* v24 — desktop Film arrows + true portrait/landscape behaviour */
+#cleanFilm{
+  position:absolute!important;
+  left:0!important;right:0!important;top:8%!important;bottom:0!important;
+  width:100%!important;height:auto!important;
+  align-items:center!important;justify-content:center!important;
+  gap:1.4vw!important;
+}
+#cleanFilm.visible{display:flex!important}
+#cleanFilmPrev,#cleanFilmNext{
+  position:relative!important;left:auto!important;right:auto!important;top:auto!important;
+  transform:none!important;pointer-events:auto!important;flex:0 0 auto!important;
+}
+.clean-film-frame{flex:0 0 min(72vw,1120px)!important}
+
+/* Portrait phone = a deliberate vertical translation of desktop */
+@media (max-width:700px) and (orientation:portrait){
+  body,#site{
+    background-size:cover!important;
+    background-position:center center!important;
+  }
+  .bg,.background,.sky-bg{
+    width:100%!important;height:100%!important;
+    object-fit:cover!important;
+  }
+
+  .header{
+    top:13svh!important;left:1.5vw!important;right:1.5vw!important;width:97vw!important;
+    grid-template-columns:repeat(5,1fr)!important;
+  }
+  .header .navitem{
+    font-size:3.7vw!important;
+    letter-spacing:.04em!important;
+  }
+
+  /* Keep the home composition large and vertically centered like the reference. */
+  #isleText{
+    transform:scale(.86)!important;
+    transform-origin:center center!important;
+  }
+  #heartIcon{
+    width:35vw!important;height:35vw!important;
+  }
+
+  /* Film: video centred, arrows remain visible and tappable. */
+  #cleanFilm{
+    top:15svh!important;bottom:5svh!important;
+    gap:0!important;
+  }
+  .clean-film-frame{
+    flex:0 0 82vw!important;
+    width:82vw!important;
+  }
+  #cleanFilmPrev,#cleanFilmNext{
+    position:absolute!important;top:50%!important;
+    transform:translateY(-50%)!important;
+    font-size:13vw!important;z-index:5!important;
+  }
+  #cleanFilmPrev{left:0!important}
+  #cleanFilmNext{right:0!important}
+
+  /* Journal: writing first, then user scrolls down to gallery. */
+  #journalOverlay{
+    display:block;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding-top:20svh!important;
+  }
+  #journalWriter{
+    position:relative!important;
+    width:92vw!important;height:43svh!important;
+    margin:0 auto 4svh!important;
+  }
+  #journalGallery{
+    position:relative!important;
+    width:92vw!important;height:52svh!important;
+    margin:0 auto 2svh!important;
+  }
+  #journalOverlay .journal-month-nav{
+    position:relative!important;
+    margin:1svh auto 6svh!important;
+  }
+}
+
+/* Landscape phone intentionally falls back toward the desktop composition. */
+@media (max-height:500px) and (orientation:landscape){
+  .header{top:2.5vh!important;left:2vw!important;right:2vw!important;width:96vw!important}
+  .header .navitem{font-size:2.3vw!important}
+  #cleanFilm{top:8vh!important}
+  .clean-film-frame{flex-basis:68vw!important;max-height:72vh!important}
+  #journalOverlay{overflow:hidden!important;padding:0!important}
+}
+
 </style>
 </head>
 <body>
@@ -1813,6 +1907,35 @@ if(journalLightboxImg && journalPhotos[journalIndex]!=='__VIDEO__')journalLightb
   document.querySelectorAll('.header .navitem').forEach(function(item){
     if(item!==filmNav)item.addEventListener('click',closeFilm);
   });
+})();
+
+
+(function(){
+  var ids=['M1pz5yc3gRc','oZK-oUaCh3Q','SA8ljjtvtdw','9EhvFdW1piY','aw2t_6hSz_Q','n4QCdRJP4RI','WhfKnieeDvk','Eb4Tq2QWLjU'];
+  var index=0;
+  var frame=document.getElementById('cleanFilmIframe');
+
+  function load(){
+    if(frame)frame.src='https://www.youtube.com/embed/'+ids[index]+'?rel=0&playsinline=1';
+  }
+  function handle(id,delta){
+    var b=document.getElementById(id);
+    if(!b)return;
+    b.addEventListener('click',function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      index=(index+delta+ids.length)%ids.length;
+      load();
+    },true);
+    b.addEventListener('touchend',function(e){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      index=(index+delta+ids.length)%ids.length;
+      load();
+    },{capture:true,passive:false});
+  }
+  handle('cleanFilmPrev',-1);
+  handle('cleanFilmNext',1);
 })();
 
 </script>
