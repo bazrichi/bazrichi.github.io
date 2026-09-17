@@ -617,163 +617,115 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
 }
 
 
-/* ============================================================
-   v25 PORTRAIT REBUILD
-   Portrait gets its own 100svh coordinate system.
-   Landscape + desktop retain the existing wide site.
-   ============================================================ */
-@media screen and (max-width:700px) and (orientation:portrait){
-  html{
-    width:100%!important;height:100%!important;
-    background:#9fb2d2!important;
-  }
-  body{
-    margin:0!important;width:100vw!important;height:100svh!important;
-    min-width:0!important;min-height:100svh!important;
-    overflow:hidden!important;background:#9fb2d2!important;
+/* ==========================================================
+   v26: HARD PORTRAIT MODE
+   ========================================================== */
+@media only screen and (max-width:700px) and (orientation:portrait){
+  html,body{
+    margin:0!important;padding:0!important;width:100%!important;height:100%!important;
+    min-width:0!important;overflow:hidden!important;background:#9fb3d3!important;
   }
 
-  /* Critical fix: cancel desktop aspect-ratio / fixed-canvas scaling. */
+  /* Turn the site into the phone viewport itself. */
   #site{
-    position:fixed!important;inset:0!important;
-    width:100vw!important;height:100svh!important;
-    min-width:0!important;min-height:0!important;
-    max-width:none!important;max-height:none!important;
-    aspect-ratio:auto!important;
-    transform:none!important;transform-origin:initial!important;
-    overflow:hidden!important;
-    background-size:cover!important;
-    background-position:center center!important;
-  }
-  #site::before{
-    content:"";position:absolute!important;inset:0!important;z-index:-5!important;
-    background:inherit!important;background-size:cover!important;background-position:center!important;
+    display:block!important;position:fixed!important;inset:0!important;
+    width:100vw!important;height:100dvh!important;min-width:0!important;min-height:0!important;
+    max-width:none!important;max-height:none!important;aspect-ratio:auto!important;
+    transform:none!important;overflow:hidden!important;
   }
 
-  /* Any actual background image/video fills the portrait viewport. */
-  #site>img:first-child,.bg,.background,.sky-bg,.site-bg{
+  /* The site's original sky layer was sized like landscape. Force it to COVER portrait. */
+  #sky,#skyBg,#background,#backgroundImage,.background,.bg,.site-bg,
+  #site > img[alt=""],#site > video:first-child{
     position:absolute!important;inset:0!important;
-    width:100vw!important;height:100svh!important;
+    width:100vw!important;height:100dvh!important;
+    min-width:100vw!important;min-height:100dvh!important;
     max-width:none!important;max-height:none!important;
     object-fit:cover!important;object-position:center center!important;
+    transform:none!important;
   }
 
-  /* Navigation: same one-line desktop order, translated to portrait. */
+  /* If the sky is a CSS background on site, cover portrait as well. */
+  #site{background-size:cover!important;background-position:center center!important;background-repeat:no-repeat!important}
+
+  /* Same desktop navigation, simply spaced for portrait. */
   .header{
-    position:absolute!important;
-    left:3vw!important;right:3vw!important;top:12svh!important;
-    width:94vw!important;height:7svh!important;
-    display:grid!important;grid-template-columns:repeat(5,1fr)!important;
-    align-items:center!important;justify-items:center!important;
-    gap:0!important;transform:none!important;z-index:70!important;
+    position:absolute!important;left:3vw!important;right:3vw!important;top:13dvh!important;
+    width:94vw!important;height:6dvh!important;z-index:80!important;
+    display:flex!important;align-items:center!important;justify-content:space-between!important;
+    transform:none!important;
   }
   .header .navitem{
-    position:static!important;transform:none!important;
-    width:auto!important;height:7svh!important;min-width:0!important;min-height:44px!important;
+    position:static!important;left:auto!important;top:auto!important;transform:none!important;
     display:flex!important;align-items:center!important;justify-content:center!important;
-    padding:0!important;margin:0!important;
-    font-size:3.55vw!important;line-height:1!important;letter-spacing:.055em!important;
-    white-space:nowrap!important;
+    width:auto!important;height:44px!important;min-width:0!important;
+    margin:0!important;padding:0!important;font-size:3.45vw!important;
+    line-height:1!important;letter-spacing:.02em!important;white-space:nowrap!important;
   }
 
-  /* HOME artwork: use the original pieces, but give them portrait coordinates. */
-  #isleText,.isle{
-    position:absolute!important;
-    left:5vw!important;top:31svh!important;
-    width:83vw!important;height:auto!important;
-    transform:none!important;transform-origin:top left!important;
+  /* Recompose the actual ISLE / OF / heart elements for portrait.
+     Multiple selectors cover the names used by the older site versions. */
+  #isle,#isleText,.isle,.isle-text{
+    display:block!important;visibility:visible!important;opacity:1!important;
+    position:absolute!important;left:5vw!important;top:30dvh!important;
+    width:auto!important;height:auto!important;max-width:none!important;
+    transform:none!important;font-size:33vw!important;line-height:.78!important;
+    z-index:5!important;color:#fff!important;
   }
-  #heartIcon,.heart{
-    position:absolute!important;
-    right:8vw!important;left:auto!important;
-    top:52svh!important;bottom:auto!important;
-    width:31vw!important;height:31vw!important;
-    transform:none!important;
+  #of,.of{
+    display:block!important;visibility:visible!important;opacity:1!important;
+    position:absolute!important;left:6vw!important;top:48dvh!important;
+    width:auto!important;height:auto!important;max-width:none!important;
+    transform:none!important;font-size:31vw!important;line-height:.8!important;
+    z-index:5!important;color:#fff!important;
+  }
+  #heart,#heartIcon,.heart,.heart-icon{
+    display:block!important;visibility:visible!important;opacity:1!important;
+    position:absolute!important;left:auto!important;right:7vw!important;
+    top:49dvh!important;bottom:auto!important;width:32vw!important;height:32vw!important;
+    transform:none!important;z-index:5!important;
   }
 
-  /* FILM */
+  /* FILM: independent player must be visible when Film is active. */
   #cleanFilm{
-    position:absolute!important;inset:0!important;
-    width:100vw!important;height:100svh!important;
-    align-items:center!important;justify-content:center!important;
-    gap:0!important;z-index:35!important;
+    position:absolute!important;inset:0!important;width:100vw!important;height:100dvh!important;
+    z-index:45!important;align-items:center!important;justify-content:center!important;
+    gap:0!important;pointer-events:none!important;
   }
-  #cleanFilm.visible{display:flex!important}
-  .clean-film-frame{
-    width:84vw!important;flex:0 0 84vw!important;
-    aspect-ratio:16/9!important;max-width:none!important;
-  }
+  #cleanFilm.visible{display:flex!important;pointer-events:auto!important}
+  .clean-film-frame{width:82vw!important;flex:0 0 82vw!important;aspect-ratio:16/9!important;background:#000!important}
+  #cleanFilmIframe{width:100%!important;height:100%!important;border:0!important;display:block!important}
   #cleanFilmPrev,#cleanFilmNext{
-    position:absolute!important;top:50%!important;
-    transform:translateY(-50%)!important;
-    font-size:13vw!important;padding:2vw!important;z-index:4!important;
+    display:block!important;position:absolute!important;top:50%!important;
+    transform:translateY(-50%)!important;font-size:13vw!important;color:#FFAD00!important;
+    z-index:5!important;pointer-events:auto!important;
   }
-  #cleanFilmPrev{left:0!important}
-  #cleanFilmNext{right:0!important}
+  #cleanFilmPrev{left:0!important} #cleanFilmNext{right:0!important}
 
-  /* JOURNAL is a vertical document: writer first, gallery after scrolling. */
+  /* JOURNAL: actual vertical flow. */
   #journalOverlay{
-    position:fixed!important;inset:0!important;
-    width:100vw!important;height:100svh!important;
-    box-sizing:border-box!important;
-    padding:21svh 4vw 7svh!important;
-    overflow-x:hidden!important;overflow-y:auto!important;
-    -webkit-overflow-scrolling:touch!important;
-    transform:none!important;z-index:32!important;
+    position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
+    box-sizing:border-box!important;padding:21dvh 4vw 6dvh!important;
+    overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;
+    transform:none!important;z-index:42!important;
   }
   #journalWriter,.journal-window,.jw-window{
-    position:relative!important;
-    left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
-    width:92vw!important;height:44svh!important;
-    margin:0 auto 4svh!important;
-    transform:none!important;
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:92vw!important;height:43dvh!important;margin:0 auto 4dvh!important;transform:none!important;
   }
   #journalGallery{
-    position:relative!important;
-    left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
-    width:92vw!important;height:52svh!important;
-    margin:0 auto 2svh!important;
-    transform:none!important;
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:92vw!important;height:52dvh!important;margin:0 auto 2dvh!important;transform:none!important;
   }
-  #journalPhoto,#journalVideo{
-    width:100%!important;max-width:100%!important;
-    object-fit:contain!important;
-  }
-  #journalText{font-size:3.45vw!important;line-height:1.34!important}
-  .jw-menu{font-size:3vw!important}
-  .jw-toolbar{font-size:2.65vw!important}
-  .jw-dropdown{min-width:34vw!important}
-  #journalPrev,#journalNext{font-size:9vw!important;padding:2vw!important}
-  #journalFullscreen{font-size:3.8vw!important}
-
   #journalOverlay .journal-month-nav{
-    position:relative!important;
-    left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
-    width:92vw!important;height:auto!important;
-    margin:1svh auto 5svh!important;
-    display:flex!important;justify-content:center!important;
-    gap:14vw!important;transform:none!important;
+    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:92vw!important;margin:1dvh auto 5dvh!important;justify-content:center!important;gap:14vw!important;
   }
+  #journalText{font-size:3.5vw!important;line-height:1.34!important}
   #journalOverlay #journalNewer,#journalOverlay #journalOlder{font-size:5vw!important}
 
-  /* Entry also gets true portrait dimensions. */
-  #entry{
-    position:fixed!important;inset:0!important;
-    width:100vw!important;height:100svh!important;
-    min-width:0!important;min-height:0!important;
-    aspect-ratio:auto!important;transform:none!important;
-    overflow:hidden!important;
-  }
-
-  /* Touch devices do not need desktop cursor styling. */
+  #entry{width:100vw!important;height:100dvh!important;aspect-ratio:auto!important;transform:none!important}
   #entry,#entry *,#site,#site *{cursor:auto!important}
-}
-
-/* When phone rotates, explicitly remove portrait assumptions.
-   Existing desktop/landscape rules take over. */
-@media screen and (max-height:700px) and (orientation:landscape){
-  body{overflow:hidden}
-  #site{aspect-ratio:16/9}
 }
 
 </style>
@@ -1977,12 +1929,37 @@ if(journalLightboxImg && journalPhotos[journalIndex]!=='__VIDEO__')journalLightb
 
 
 (function(){
-  function setMobileViewport(){
-    document.documentElement.style.setProperty('--app-height', window.innerHeight+'px');
+  var film=document.querySelector('.header .navitem[data-action="film"]');
+  var clean=document.getElementById('cleanFilm');
+  var iframe=document.getElementById('cleanFilmIframe');
+  var ids=['M1pz5yc3gRc','oZK-oUaCh3Q','SA8ljjtvtdw','9EhvFdW1piY','aw2t_6hSz_Q','n4QCdRJP4RI','WhfKnieeDvk','Eb4Tq2QWLjU'];
+  var ix=0;
+  if(!film||!clean||!iframe)return;
+
+  function load(){iframe.src='https://www.youtube.com/embed/'+ids[ix]+'?rel=0&playsinline=1';}
+  function sync(){
+    var active=film.classList.contains('page-active');
+    clean.classList.toggle('visible',active);
+    clean.style.setProperty('display',active?'flex':'none','important');
+    if(active && !iframe.src)load();
+    if(!active)iframe.src='';
   }
-  setMobileViewport();
-  window.addEventListener('resize',setMobileViewport,{passive:true});
-  window.addEventListener('orientationchange',function(){setTimeout(setMobileViewport,150)},{passive:true});
+  film.addEventListener('click',function(){setTimeout(sync,10);});
+
+  document.querySelectorAll('.header .navitem').forEach(function(n){
+    if(n!==film)n.addEventListener('click',function(){
+      clean.classList.remove('visible');
+      clean.style.setProperty('display','none','important');
+      iframe.src='';
+    });
+  });
+
+  document.getElementById('cleanFilmNext')?.addEventListener('click',function(e){
+    e.preventDefault();e.stopImmediatePropagation();ix=(ix+1)%ids.length;load();
+  },true);
+  document.getElementById('cleanFilmPrev')?.addEventListener('click',function(e){
+    e.preventDefault();e.stopImmediatePropagation();ix=(ix-1+ids.length)%ids.length;load();
+  },true);
 })();
 
 </script>
