@@ -732,6 +732,15 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
 @media only screen and (max-width:700px) and (orientation:portrait){
   #site{position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;overflow:hidden!important}
 
+  /* #siteStage uses "container-type" for its desktop cqw/cqh sizing, but a
+     container is also a containing block for position:fixed descendants —
+     same as a transform would be. That's why .header below could say
+     "fixed" and still end up anchored to (and scrolling with) siteStage's
+     box instead of the real viewport. Turning it off here is safe because
+     every rule in this portrait block already sizes things with vw/dvh,
+     not cq units. */
+  #siteStage{container-type:normal!important}
+
   /* fixed portrait menu: it never scrolls with Journal */
   .header{
     position:fixed!important;left:2vw!important;right:2vw!important;top:46.5dvh!important;
@@ -783,7 +792,22 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
     width:92vw!important;margin:1dvh auto 7dvh!important;z-index:42!important
   }
 
-  #cleanFilm{z-index:45!important}
+  /* Film's video docked as a fixed bottom panel, like the journal photo
+     panel, instead of floating centered over the whole screen. */
+  #cleanFilm{
+    position:fixed!important;inset:auto!important;
+    left:0!important;right:0!important;bottom:0!important;top:auto!important;
+    width:100vw!important;height:56dvh!important;
+    display:none;align-items:center!important;justify-content:center!important;
+    gap:0!important;pointer-events:none!important;z-index:45!important;
+  }
+  #cleanFilm.visible{display:flex!important;pointer-events:auto!important}
+  .clean-film-frame{
+    width:100vw!important;flex:0 0 100vw!important;height:100%!important;
+    aspect-ratio:auto!important;background:#000!important;
+  }
+  #cleanFilmIframe{width:100%!important;height:100%!important;border:0!important;display:block!important}
+  #cleanFilmPrev,#cleanFilmNext{bottom:2dvh!important;top:auto!important;transform:none!important}
 }
 
 </style>
@@ -1785,7 +1809,14 @@ if(journalLightboxImg && journalPhotos[journalIndex]!=='__VIDEO__')journalLightb
   var items=Array.from(document.querySelectorAll('.header .navitem'));
 
   function clearAll(){
-    items.forEach(function(x){x.classList.remove('page-active');});
+    items.forEach(function(x){
+      x.classList.remove('page-active');
+      // The hover effect paints the letters orange with an inline style. If the
+      // mouse never leaves the item (e.g. you just clicked it), that inline
+      // style outlives the click and the item looks stuck orange even after
+      // page-active is removed. Wipe it here so the CSS rule is back in charge.
+      x.querySelectorAll('.letter').forEach(function(l){ l.style.color = ''; });
+    });
   }
 
   items.forEach(function(item){
