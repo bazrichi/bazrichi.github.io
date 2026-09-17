@@ -741,10 +741,19 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
      not cq units. */
   #siteStage{container-type:normal!important}
 
-  /* fixed portrait menu: it never scrolls with Journal */
+  /* ============================================================
+     TWO-PANEL PORTRAIT LAYOUT
+     Screen splits into a top panel (0–44dvh, the "ISLE OF" title —
+     or the journal notes, when Journal is open) and a bottom panel
+     (51dvh–100dvh: photo/video content), with the nav fixed as the
+     divider between them at all times.
+     ============================================================ */
+
+  /* fixed portrait menu: the divider between the two panels. It never
+     scrolls with Journal or Film. */
   .header{
-    position:fixed!important;left:2vw!important;right:2vw!important;top:46.5dvh!important;
-    width:96vw!important;height:6dvh!important;z-index:1000!important;
+    position:fixed!important;left:2vw!important;right:2vw!important;top:44dvh!important;
+    width:96vw!important;height:7dvh!important;z-index:1000!important;
     display:flex!important;align-items:center!important;justify-content:space-between!important;
     transform:none!important;pointer-events:auto!important
   }
@@ -755,7 +764,7 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
     line-height:1!important;letter-spacing:.035em!important;white-space:nowrap!important;z-index:1001!important
   }
 
-  /* fixed main-page artwork behind all section content */
+  /* TOP PANEL (default): the "ISLE OF" title art, confined above the nav */
   #isle,#isleText,.isle,.isle-text{
     display:block!important;visibility:visible!important;opacity:1!important;position:absolute!important;
     left:2vw!important;top:4dvh!important;font-size:35vw!important;line-height:.78!important;
@@ -772,42 +781,47 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
     width:30vw!important;height:30vw!important;transform:none!important;z-index:4!important
   }
 
-  /* only Journal content scrolls */
+  /* JOURNAL: notes replace the top panel and are fixed in place (they
+     don't scroll); the photo slide is its own bottom panel and gets a
+     small internal scroll of its own. */
   #journalOverlay{
     position:fixed!important;inset:0!important;width:100vw!important;height:100dvh!important;
-    overflow-x:hidden!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important;
-    box-sizing:border-box!important;padding:7dvh 4vw 8dvh!important;z-index:40!important;
+    overflow:hidden!important;padding:0!important;z-index:40!important;
     background:transparent!important;transform:none!important
   }
   #journalWriter,.journal-window,.jw-window{
-    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
-    width:92vw!important;height:43dvh!important;margin:0 auto 7dvh!important;transform:none!important;z-index:42!important
+    position:fixed!important;left:2vw!important;right:2vw!important;top:2dvh!important;bottom:auto!important;
+    width:96vw!important;height:40dvh!important;margin:0!important;transform:none!important;
+    z-index:42!important;overflow:hidden!important
   }
   #journalGallery{
-    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
-    width:92vw!important;height:52dvh!important;margin:0 auto 3dvh!important;transform:none!important;z-index:42!important
+    position:fixed!important;left:0!important;right:0!important;top:52dvh!important;bottom:7dvh!important;
+    width:100vw!important;height:auto!important;margin:0!important;transform:none!important;
+    z-index:42!important;overflow-y:auto!important;-webkit-overflow-scrolling:touch!important
   }
   #journalOverlay .journal-month-nav{
-    position:relative!important;left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
-    width:92vw!important;margin:1dvh auto 7dvh!important;z-index:42!important
+    position:fixed!important;left:0!important;right:0!important;bottom:0.5dvh!important;top:auto!important;
+    width:100vw!important;margin:0!important;z-index:43!important;
+    display:flex!important;justify-content:center!important;gap:14vw!important;pointer-events:auto!important
   }
 
-  /* Film's video docked as a fixed bottom panel, like the journal photo
-     panel, instead of floating centered over the whole screen. */
+  /* FILM: the video is the fixed bottom panel, sized to fill it edge to
+     edge for a good iPhone watching size. Swipe left/right anywhere on
+     it to go to the next/previous video (see the swipe script below). */
   #cleanFilm{
     position:fixed!important;inset:auto!important;
-    left:0!important;right:0!important;bottom:0!important;top:auto!important;
-    width:100vw!important;height:56dvh!important;
+    left:0!important;right:0!important;bottom:0!important;top:51dvh!important;
+    width:100vw!important;height:auto!important;
     display:none;align-items:center!important;justify-content:center!important;
     gap:0!important;pointer-events:none!important;z-index:45!important;
   }
   #cleanFilm.visible{display:flex!important;pointer-events:auto!important}
   .clean-film-frame{
     width:100vw!important;flex:0 0 100vw!important;height:100%!important;
-    aspect-ratio:auto!important;background:#000!important;
+    aspect-ratio:auto!important;background:#000!important;touch-action:pan-y!important;
   }
   #cleanFilmIframe{width:100%!important;height:100%!important;border:0!important;display:block!important}
-  #cleanFilmPrev,#cleanFilmNext{bottom:2dvh!important;top:auto!important;transform:none!important}
+  #cleanFilmPrev,#cleanFilmNext{top:50%!important;bottom:auto!important;transform:translateY(-50%)!important}
 }
 
 </style>
@@ -1416,6 +1430,11 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
 (function(){
   var HOVER_COLOR = '#FFAD00';
   var SPARKLE_GLYPHS = ['\u2726', '\u2727', '\u2731'];
+  // iPhone/touch fires a synthetic "mouseenter" on tap but often no matching
+  // "mouseleave" until you tap something else, so the sparkle interval below
+  // never got cleared and the whole menu sparkled non-stop. Only real mouse
+  // hover (a fine pointer that supports hover) gets this effect.
+  var canHover = !window.matchMedia || window.matchMedia('(hover:hover) and (pointer:fine)').matches;
 
   document.querySelectorAll('.header .navitem').forEach(function(el){
     var word = el.getAttribute('data-word') || el.textContent.trim();
@@ -1440,11 +1459,13 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
     }
 
     el.addEventListener('mouseenter', function(){
+      if (!canHover) return;
       letters.forEach(function(l){ l.style.color = HOVER_COLOR; });
       spawnSparkle(); spawnSparkle();
       sparkleTimer = setInterval(spawnSparkle, 140);
     });
     el.addEventListener('mouseleave', function(){
+      if (!canHover) return;
       letters.forEach(function(l){ l.style.color = '#fff'; });
       if (sparkleTimer){ clearInterval(sparkleTimer); sparkleTimer = null; }
     });
@@ -2049,6 +2070,28 @@ if(journalLightboxImg && journalPhotos[journalIndex]!=='__VIDEO__')journalLightb
   document.getElementById('cleanFilmPrev')?.addEventListener('click',function(e){
     e.preventDefault();e.stopImmediatePropagation();ix=(ix-1+ids.length)%ids.length;load();
   },true);
+})();
+
+(function(){
+  // Flick left/right on the film video to go to the next/previous one,
+  // same as tapping the arrow buttons.
+  var frame = document.querySelector('#cleanFilm .clean-film-frame');
+  if (!frame) return;
+  var startX = null, startY = null;
+  frame.addEventListener('touchstart', function(e){
+    var t = e.changedTouches[0];
+    startX = t.clientX; startY = t.clientY;
+  }, {passive:true});
+  frame.addEventListener('touchend', function(e){
+    if (startX === null) return;
+    var t = e.changedTouches[0];
+    var dx = t.clientX - startX, dy = t.clientY - startY;
+    startX = null;
+    if (Math.abs(dx) > 40 && Math.abs(dx) > Math.abs(dy) * 1.5){
+      var btn = document.getElementById(dx < 0 ? 'cleanFilmNext' : 'cleanFilmPrev');
+      if (btn) btn.click();
+    }
+  }, {passive:true});
 })();
 
 </script>
