@@ -617,97 +617,163 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
 }
 
 
-/* v24 — desktop Film arrows + true portrait/landscape behaviour */
-#cleanFilm{
-  position:absolute!important;
-  left:0!important;right:0!important;top:8%!important;bottom:0!important;
-  width:100%!important;height:auto!important;
-  align-items:center!important;justify-content:center!important;
-  gap:1.4vw!important;
-}
-#cleanFilm.visible{display:flex!important}
-#cleanFilmPrev,#cleanFilmNext{
-  position:relative!important;left:auto!important;right:auto!important;top:auto!important;
-  transform:none!important;pointer-events:auto!important;flex:0 0 auto!important;
-}
-.clean-film-frame{flex:0 0 min(72vw,1120px)!important}
+/* ============================================================
+   v25 PORTRAIT REBUILD
+   Portrait gets its own 100svh coordinate system.
+   Landscape + desktop retain the existing wide site.
+   ============================================================ */
+@media screen and (max-width:700px) and (orientation:portrait){
+  html{
+    width:100%!important;height:100%!important;
+    background:#9fb2d2!important;
+  }
+  body{
+    margin:0!important;width:100vw!important;height:100svh!important;
+    min-width:0!important;min-height:100svh!important;
+    overflow:hidden!important;background:#9fb2d2!important;
+  }
 
-/* Portrait phone = a deliberate vertical translation of desktop */
-@media (max-width:700px) and (orientation:portrait){
-  body,#site{
+  /* Critical fix: cancel desktop aspect-ratio / fixed-canvas scaling. */
+  #site{
+    position:fixed!important;inset:0!important;
+    width:100vw!important;height:100svh!important;
+    min-width:0!important;min-height:0!important;
+    max-width:none!important;max-height:none!important;
+    aspect-ratio:auto!important;
+    transform:none!important;transform-origin:initial!important;
+    overflow:hidden!important;
     background-size:cover!important;
     background-position:center center!important;
   }
-  .bg,.background,.sky-bg{
-    width:100%!important;height:100%!important;
-    object-fit:cover!important;
+  #site::before{
+    content:"";position:absolute!important;inset:0!important;z-index:-5!important;
+    background:inherit!important;background-size:cover!important;background-position:center!important;
   }
 
+  /* Any actual background image/video fills the portrait viewport. */
+  #site>img:first-child,.bg,.background,.sky-bg,.site-bg{
+    position:absolute!important;inset:0!important;
+    width:100vw!important;height:100svh!important;
+    max-width:none!important;max-height:none!important;
+    object-fit:cover!important;object-position:center center!important;
+  }
+
+  /* Navigation: same one-line desktop order, translated to portrait. */
   .header{
-    top:13svh!important;left:1.5vw!important;right:1.5vw!important;width:97vw!important;
-    grid-template-columns:repeat(5,1fr)!important;
+    position:absolute!important;
+    left:3vw!important;right:3vw!important;top:12svh!important;
+    width:94vw!important;height:7svh!important;
+    display:grid!important;grid-template-columns:repeat(5,1fr)!important;
+    align-items:center!important;justify-items:center!important;
+    gap:0!important;transform:none!important;z-index:70!important;
   }
   .header .navitem{
-    font-size:3.7vw!important;
-    letter-spacing:.04em!important;
+    position:static!important;transform:none!important;
+    width:auto!important;height:7svh!important;min-width:0!important;min-height:44px!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    padding:0!important;margin:0!important;
+    font-size:3.55vw!important;line-height:1!important;letter-spacing:.055em!important;
+    white-space:nowrap!important;
   }
 
-  /* Keep the home composition large and vertically centered like the reference. */
-  #isleText{
-    transform:scale(.86)!important;
-    transform-origin:center center!important;
+  /* HOME artwork: use the original pieces, but give them portrait coordinates. */
+  #isleText,.isle{
+    position:absolute!important;
+    left:5vw!important;top:31svh!important;
+    width:83vw!important;height:auto!important;
+    transform:none!important;transform-origin:top left!important;
   }
-  #heartIcon{
-    width:35vw!important;height:35vw!important;
+  #heartIcon,.heart{
+    position:absolute!important;
+    right:8vw!important;left:auto!important;
+    top:52svh!important;bottom:auto!important;
+    width:31vw!important;height:31vw!important;
+    transform:none!important;
   }
 
-  /* Film: video centred, arrows remain visible and tappable. */
+  /* FILM */
   #cleanFilm{
-    top:15svh!important;bottom:5svh!important;
-    gap:0!important;
+    position:absolute!important;inset:0!important;
+    width:100vw!important;height:100svh!important;
+    align-items:center!important;justify-content:center!important;
+    gap:0!important;z-index:35!important;
   }
+  #cleanFilm.visible{display:flex!important}
   .clean-film-frame{
-    flex:0 0 82vw!important;
-    width:82vw!important;
+    width:84vw!important;flex:0 0 84vw!important;
+    aspect-ratio:16/9!important;max-width:none!important;
   }
   #cleanFilmPrev,#cleanFilmNext{
     position:absolute!important;top:50%!important;
     transform:translateY(-50%)!important;
-    font-size:13vw!important;z-index:5!important;
+    font-size:13vw!important;padding:2vw!important;z-index:4!important;
   }
   #cleanFilmPrev{left:0!important}
   #cleanFilmNext{right:0!important}
 
-  /* Journal: writing first, then user scrolls down to gallery. */
+  /* JOURNAL is a vertical document: writer first, gallery after scrolling. */
   #journalOverlay{
-    display:block;
-    overflow-y:auto!important;
+    position:fixed!important;inset:0!important;
+    width:100vw!important;height:100svh!important;
+    box-sizing:border-box!important;
+    padding:21svh 4vw 7svh!important;
+    overflow-x:hidden!important;overflow-y:auto!important;
     -webkit-overflow-scrolling:touch!important;
-    padding-top:20svh!important;
+    transform:none!important;z-index:32!important;
   }
-  #journalWriter{
+  #journalWriter,.journal-window,.jw-window{
     position:relative!important;
-    width:92vw!important;height:43svh!important;
+    left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:92vw!important;height:44svh!important;
     margin:0 auto 4svh!important;
+    transform:none!important;
   }
   #journalGallery{
     position:relative!important;
+    left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
     width:92vw!important;height:52svh!important;
     margin:0 auto 2svh!important;
+    transform:none!important;
   }
+  #journalPhoto,#journalVideo{
+    width:100%!important;max-width:100%!important;
+    object-fit:contain!important;
+  }
+  #journalText{font-size:3.45vw!important;line-height:1.34!important}
+  .jw-menu{font-size:3vw!important}
+  .jw-toolbar{font-size:2.65vw!important}
+  .jw-dropdown{min-width:34vw!important}
+  #journalPrev,#journalNext{font-size:9vw!important;padding:2vw!important}
+  #journalFullscreen{font-size:3.8vw!important}
+
   #journalOverlay .journal-month-nav{
     position:relative!important;
-    margin:1svh auto 6svh!important;
+    left:auto!important;right:auto!important;top:auto!important;bottom:auto!important;
+    width:92vw!important;height:auto!important;
+    margin:1svh auto 5svh!important;
+    display:flex!important;justify-content:center!important;
+    gap:14vw!important;transform:none!important;
   }
+  #journalOverlay #journalNewer,#journalOverlay #journalOlder{font-size:5vw!important}
+
+  /* Entry also gets true portrait dimensions. */
+  #entry{
+    position:fixed!important;inset:0!important;
+    width:100vw!important;height:100svh!important;
+    min-width:0!important;min-height:0!important;
+    aspect-ratio:auto!important;transform:none!important;
+    overflow:hidden!important;
+  }
+
+  /* Touch devices do not need desktop cursor styling. */
+  #entry,#entry *,#site,#site *{cursor:auto!important}
 }
 
-/* Landscape phone intentionally falls back toward the desktop composition. */
-@media (max-height:500px) and (orientation:landscape){
-  .header{top:2.5vh!important;left:2vw!important;right:2vw!important;width:96vw!important}
-  .header .navitem{font-size:2.3vw!important}
-  #cleanFilm{top:8vh!important}
-  .clean-film-frame{flex-basis:68vw!important;max-height:72vh!important}
-  #journalOverlay{overflow:hidden!important;padding:0!important}
+/* When phone rotates, explicitly remove portrait assumptions.
+   Existing desktop/landscape rules take over. */
+@media screen and (max-height:700px) and (orientation:landscape){
+  body{overflow:hidden}
+  #site{aspect-ratio:16/9}
 }
 
 </style>
@@ -1911,31 +1977,12 @@ if(journalLightboxImg && journalPhotos[journalIndex]!=='__VIDEO__')journalLightb
 
 
 (function(){
-  var ids=['M1pz5yc3gRc','oZK-oUaCh3Q','SA8ljjtvtdw','9EhvFdW1piY','aw2t_6hSz_Q','n4QCdRJP4RI','WhfKnieeDvk','Eb4Tq2QWLjU'];
-  var index=0;
-  var frame=document.getElementById('cleanFilmIframe');
-
-  function load(){
-    if(frame)frame.src='https://www.youtube.com/embed/'+ids[index]+'?rel=0&playsinline=1';
+  function setMobileViewport(){
+    document.documentElement.style.setProperty('--app-height', window.innerHeight+'px');
   }
-  function handle(id,delta){
-    var b=document.getElementById(id);
-    if(!b)return;
-    b.addEventListener('click',function(e){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      index=(index+delta+ids.length)%ids.length;
-      load();
-    },true);
-    b.addEventListener('touchend',function(e){
-      e.preventDefault();
-      e.stopImmediatePropagation();
-      index=(index+delta+ids.length)%ids.length;
-      load();
-    },{capture:true,passive:false});
-  }
-  handle('cleanFilmPrev',-1);
-  handle('cleanFilmNext',1);
+  setMobileViewport();
+  window.addEventListener('resize',setMobileViewport,{passive:true});
+  window.addEventListener('orientationchange',function(){setTimeout(setMobileViewport,150)},{passive:true});
 })();
 
 </script>
