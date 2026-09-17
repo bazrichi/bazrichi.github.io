@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>isle of</title>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
 <style>
@@ -388,6 +388,135 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
 #retroTimeline::-moz-range-progress{height:1.05cqw;background:#55baff;border-radius:.6cqw}
 #retroTimeline::-moz-range-thumb{width:2.2cqw;height:2.2cqw;border-radius:50%;background:#ddd;border:.15cqw solid #999}
 
+
+/* =========================================================
+   iPHONE / MOBILE TRANSLATION
+   Desktop remains unchanged above 700px.
+   ========================================================= */
+@media (max-width:700px){
+  html,body{width:100%;min-height:100%;overflow-x:hidden}
+  body{min-height:100svh}
+
+  /* Main artwork becomes a portrait composition rather than shrinking desktop. */
+  #site{width:100vw!important;height:100svh!important;min-height:100svh!important;overflow:hidden!important}
+  .header{
+    top:2.2svh!important;left:4vw!important;right:4vw!important;width:92vw!important;
+    display:flex!important;justify-content:space-between!important;align-items:center!important;
+    gap:0!important;z-index:50!important
+  }
+  .header .navitem{font-size:4.4vw!important;letter-spacing:.12em!important;white-space:nowrap!important}
+  .header .navitem .letter{margin:0!important}
+
+  /* Preserve giant ISLE OF art as background texture. */
+  .isle,.of,.heart{pointer-events:none}
+  .isle{transform:scale(1.4)!important;transform-origin:center center!important}
+  .of{transform:scale(1.35)!important;transform-origin:center center!important}
+  .heart{transform:scale(.92)!important;transform-origin:center center!important}
+
+  /* JOURNAL: stack writing and photos vertically and make both touch-friendly. */
+  #journalOverlay{
+    position:absolute!important;inset:0!important;width:100%!important;height:100%!important;
+    overflow-y:auto!important;overflow-x:hidden!important;padding:11svh 4vw 12svh!important;
+    box-sizing:border-box!important;-webkit-overflow-scrolling:touch!important
+  }
+  #journalOverlay .journal-window,
+  #journalOverlay .jw-window{
+    position:relative!important;left:auto!important;top:auto!important;
+    width:92vw!important;height:43svh!important;margin:0 auto 3svh!important;
+    transform:none!important
+  }
+  #journalGallery{
+    position:relative!important;left:auto!important;top:auto!important;
+    width:92vw!important;height:51svh!important;margin:0 auto 2svh!important;
+    transform:none!important
+  }
+  #journalPhoto,#journalVideo{max-width:100%!important}
+  #journalText{font-size:3.5vw!important;line-height:1.32!important}
+  .jw-menu{font-size:3.1vw!important}
+  .jw-dropdown{min-width:34vw!important;font-size:3vw!important}
+  .jw-toolbar{font-size:2.7vw!important}
+  .jw-tool{min-width:8vw!important;min-height:7vw!important}
+  #journalPrev,#journalNext{font-size:9vw!important;padding:2vw!important}
+  #journalFullscreen{font-size:4vw!important;bottom:.5vw!important}
+
+  #journalOverlay .journal-month-nav{
+    position:relative!important;left:auto!important;top:auto!important;width:92vw!important;
+    margin:1svh auto 4svh!important;gap:12vw!important;justify-content:center!important
+  }
+  #journalOverlay #journalNewer,#journalOverlay #journalOlder{font-size:5vw!important}
+
+  /* FILM: centered portrait-sized Macintosh player. */
+  #ytPlayer,#ytPlayer.film-layout{
+    left:50%!important;top:53%!important;transform:translate(-50%,-50%)!important;
+    width:90vw!important;height:88vw!important;
+    border-width:1.3vw!important;border-radius:5vw!important;
+    padding:6vw!important
+  }
+  #ytPlayer:before{inset:1.3vw!important;border-width:.45vw!important;border-radius:3.5vw!important}
+  #ytEmbed{
+    left:7.4vw!important;right:7.4vw!important;top:6.6vw!important;
+    width:72.5vw!important;height:48.5vw!important;border-width:.5vw!important
+  }
+  #ytControls{
+    left:7vw!important;right:7vw!important;bottom:5vw!important;height:20vw!important
+  }
+  .retro-buttons{gap:3vw!important}
+  .retro-btn{
+    width:12vw!important;height:12vw!important;font-size:4vw!important;border-width:.35vw!important
+  }
+  #retroPlay{font-size:4vw!important}
+  .retro-lights{left:-4vw!important;bottom:2.8vw!important;gap:1.5vw!important}
+  .retro-light{width:3.5vw!important;height:3.5vw!important}
+  .retro-timeline-wrap{height:5.5vw!important}
+  #retroTimeline::-webkit-slider-runnable-track{height:2.4vw!important;border-radius:1.4vw!important}
+  #retroTimeline::-webkit-slider-thumb{width:5vw!important;height:5vw!important;margin-top:-1.55vw!important}
+
+  /* Fullscreen journal arrows stay reachable by thumbs. */
+  #journalLightbox .lightbox-arrow{font-size:14vw!important;padding:3vw!important}
+  #journalLightboxPrev{left:1vw!important}#journalLightboxNext{right:1vw!important}
+
+  /* Entry remains full-screen and tappable. Custom cursor isn't useful on touch. */
+  #entry,#entry *{cursor:auto!important}
+}
+
+/* Narrow iPhones */
+@media (max-width:390px){
+  .header .navitem{font-size:4vw!important}
+  #journalText{font-size:3.8vw!important}
+}
+
+
+@media (pointer:coarse){
+  button,.navitem,#journalPrev,#journalNext,#journalFullscreen{touch-action:manipulation}
+  .navitem{min-height:44px;display:flex;align-items:center}
+}
+
+
+/* FILM v22 — clean YouTube player */
+#filmRelated{display:none!important}
+#ytPlayer,#ytPlayer.film-layout{
+  left:50%!important;top:52%!important;transform:translate(-50%,-50%)!important;
+  width:min(68vw,1100px)!important;height:auto!important;aspect-ratio:16/9!important;
+  padding:0!important;background:#000!important;border:0!important;border-radius:0!important;
+  box-shadow:none!important;overflow:visible!important
+}
+#ytPlayer:before{display:none!important}
+#ytEmbed{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;border:0!important}
+#ytControls{display:none!important}
+.film-simple-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:25;
+  border:0;background:transparent;color:#FFAD00;font-size:5cqw;line-height:1;
+  padding:.5cqw;cursor:pointer;text-shadow:none
+}
+#filmSimplePrev{right:calc(100% + 1.2cqw)}
+#filmSimpleNext{left:calc(100% + 1.2cqw)}
+@media(max-width:700px){
+  #ytPlayer,#ytPlayer.film-layout{width:82vw!important;top:51%!important}
+  .film-simple-arrow{font-size:12vw!important;padding:1vw!important}
+  #filmSimplePrev{right:calc(100% + 1vw)}
+  #filmSimpleNext{left:calc(100% + 1vw)}
+}
+
 </style>
 </head>
 <body>
@@ -444,7 +573,7 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
     </div>
 
     <!-- Old YouTube-style player -->
-    <div id="ytPlayer">
+    <div id="ytPlayer"><button id="filmSimplePrev" class="film-simple-arrow" aria-label="Previous video">‹</button><button id="filmSimpleNext" class="film-simple-arrow" aria-label="Next video">›</button>
       <div id="ytScreen">
         <iframe id="ytIframe" src="" title="Film" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
       </div>
@@ -1492,6 +1621,29 @@ if(journalLightboxImg && journalPhotos[journalIndex]!=='__VIDEO__')journalLightb
     var d=retroPlayer.getDuration()||0;
     retroPlayer.seekTo(d*(Number(this.value)/1000),true);
   });
+})();
+
+
+(function(){
+  var ids=['M1pz5yc3gRc','M1pz5yc3gRc','oZK-oUaCh3Q','SA8ljjtvtdw','9EhvFdW1piY','aw2t_6hSz_Q','n4QCdRJP4RI','WhfKnieeDvk','Eb4Tq2QWLjU'];
+  var i=0;
+  function ensureSimple(){
+    var host=document.getElementById('ytEmbed');
+    if(!host)return null;
+    if(host.tagName.toLowerCase()==='iframe') return host;
+    var f=document.createElement('iframe');
+    f.id='ytEmbed';f.allow='accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+    f.allowFullscreen=true;f.frameBorder='0';
+    host.replaceWith(f);return f;
+  }
+  function show(n){
+    i=(n+ids.length)%ids.length;
+    var f=ensureSimple();if(!f)return;
+    f.src='https://www.youtube.com/embed/'+ids[i]+'?rel=0';
+  }
+  document.getElementById('filmSimplePrev')?.addEventListener('click',function(e){e.stopPropagation();show(i-1)});
+  document.getElementById('filmSimpleNext')?.addEventListener('click',function(e){e.stopPropagation();show(i+1)});
+  setTimeout(function(){show(0)},0);
 })();
 
 </script>
