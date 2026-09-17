@@ -517,6 +517,105 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
   #filmSimpleNext{left:calc(100% + 1vw)}
 }
 
+
+/* =========================================================
+   v23 CLEAN FILM — independent from legacy player
+   ========================================================= */
+#ytPlayer,#filmRelated{display:none!important}
+#cleanFilm{
+  position:absolute;inset:0;z-index:18;display:none;
+  align-items:center;justify-content:center;gap:1.6vw;
+  pointer-events:none;
+}
+#cleanFilm.visible{display:flex;pointer-events:auto}
+.clean-film-frame{
+  width:min(72vw,1120px);aspect-ratio:16/9;background:#000;
+  box-shadow:0 .25vw .7vw rgba(0,0,0,.22);
+}
+#cleanFilmIframe{display:block;width:100%;height:100%;border:0}
+.clean-film-arrow{
+  border:0;background:transparent;color:#FFAD00;
+  font:400 clamp(48px,6vw,100px)/1 Arial,sans-serif;
+  padding:.35em .15em;cursor:pointer;z-index:3;
+  -webkit-tap-highlight-color:transparent;
+}
+.clean-film-arrow:hover{filter:drop-shadow(0 0 .18em #fff) drop-shadow(0 0 .28em #FFAD00)}
+
+/* =========================================================
+   REAL PORTRAIT IPHONE LAYOUT
+   ========================================================= */
+@media (max-width:700px) and (orientation:portrait){
+  html,body{width:100%!important;height:100%!important;min-height:100%!important;overflow:hidden!important}
+  #entry,#site{width:100vw!important;height:100svh!important;min-height:100svh!important}
+
+  /* Keep the original sky/art, but compose it vertically. */
+  #isleText{transform:scale(.72)!important;transform-origin:center center!important}
+  #heartIcon{width:42vw!important;height:42vw!important;right:5vw!important;bottom:12svh!important}
+
+  /* Mobile nav is a readable two-row grid, not compressed desktop coordinates. */
+  .header{
+    position:absolute!important;top:max(1.4svh,env(safe-area-inset-top))!important;
+    left:4vw!important;right:4vw!important;width:92vw!important;height:auto!important;
+    display:grid!important;grid-template-columns:repeat(5,1fr)!important;
+    align-items:center!important;z-index:60!important;gap:0!important;
+  }
+  .header .navitem{
+    position:relative!important;left:auto!important;top:auto!important;
+    width:auto!important;min-width:0!important;min-height:44px!important;
+    display:flex!important;align-items:center!important;justify-content:center!important;
+    font-size:3.55vw!important;letter-spacing:.03em!important;white-space:nowrap!important;
+    transform:none!important;padding:0!important;
+  }
+
+  /* Film fills the useful portrait width with arrows INSIDE screen edges. */
+  #cleanFilm{
+    top:9svh!important;bottom:5svh!important;left:0!important;right:0!important;
+    width:100vw!important;height:auto!important;gap:0!important;
+    display:none!important;align-items:center!important;justify-content:center!important;
+  }
+  #cleanFilm.visible{display:flex!important}
+  .clean-film-frame{width:88vw!important;aspect-ratio:16/9!important}
+  .clean-film-arrow{
+    position:absolute!important;top:50%!important;transform:translateY(-50%)!important;
+    font-size:15vw!important;padding:3vw 1vw!important;
+  }
+  #cleanFilmPrev{left:.5vw!important}
+  #cleanFilmNext{right:.5vw!important}
+
+  /* Journal is a real vertical page on portrait iPhone. */
+  #journalOverlay{
+    position:absolute!important;inset:0!important;width:100vw!important;height:100svh!important;
+    overflow-y:auto!important;overflow-x:hidden!important;
+    padding:10svh 4vw 8svh!important;box-sizing:border-box!important;
+    -webkit-overflow-scrolling:touch!important;
+  }
+  #journalWriter{
+    position:relative!important;left:auto!important;top:auto!important;
+    width:92vw!important;height:42svh!important;margin:0 auto 3svh!important;
+    transform:none!important;
+  }
+  #journalGallery{
+    position:relative!important;left:auto!important;top:auto!important;
+    width:92vw!important;height:52svh!important;margin:0 auto 2svh!important;
+    transform:none!important;
+  }
+  #journalText{font-size:3.55vw!important;line-height:1.35!important}
+  .jw-menu{font-size:3vw!important}
+  .jw-toolbar{font-size:2.65vw!important}
+  #journalPrev,#journalNext{font-size:9vw!important;padding:2vw!important}
+  #journalFullscreen{font-size:3.8vw!important}
+
+  #journalOverlay .journal-month-nav{
+    position:relative!important;left:auto!important;top:auto!important;
+    width:92vw!important;margin:1svh auto 3svh!important;
+    justify-content:center!important;gap:14vw!important;
+  }
+  #journalOverlay #journalNewer,#journalOverlay #journalOlder{font-size:5vw!important}
+
+  /* No desktop cursor behavior on touch. */
+  #entry,#entry *,#site,#site *{cursor:auto!important}
+}
+
 </style>
 </head>
 <body>
@@ -607,6 +706,17 @@ body:has(.header .navitem[data-action="journal"].page-active) .journal-month-nav
         <div id="ytFullBtn"></div>
       </div>
     </div>
+
+
+<div id="cleanFilm" aria-hidden="true">
+  <button id="cleanFilmPrev" class="clean-film-arrow" aria-label="Previous video">‹</button>
+  <div class="clean-film-frame">
+    <iframe id="cleanFilmIframe" src="" title="Baro film"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen></iframe>
+  </div>
+  <button id="cleanFilmNext" class="clean-film-arrow" aria-label="Next video">›</button>
+</div>
 
     <!-- Journal interface -->
     <div id="journalOverlay" aria-hidden="true"><div id="journalWriter"><div class="jw-menu">
@@ -1644,6 +1754,65 @@ if(journalLightboxImg && journalPhotos[journalIndex]!=='__VIDEO__')journalLightb
   document.getElementById('filmSimplePrev')?.addEventListener('click',function(e){e.stopPropagation();show(i-1)});
   document.getElementById('filmSimpleNext')?.addEventListener('click',function(e){e.stopPropagation();show(i+1)});
   setTimeout(function(){show(0)},0);
+})();
+
+
+(function(){
+  // Duplicate first share URL removed because it points to the exact same YouTube video ID.
+  // This makes every press of NEXT visibly advance to a different video.
+  var filmIds=[
+    'M1pz5yc3gRc',
+    'oZK-oUaCh3Q',
+    'SA8ljjtvtdw',
+    '9EhvFdW1piY',
+    'aw2t_6hSz_Q',
+    'n4QCdRJP4RI',
+    'WhfKnieeDvk',
+    'Eb4Tq2QWLjU'
+  ];
+  var filmIndex=0;
+  var filmNav=document.querySelector('.header .navitem[data-action="film"]');
+  var journalNav=document.querySelector('.header .navitem[data-action="journal"]');
+  var clean=document.getElementById('cleanFilm');
+  var frame=document.getElementById('cleanFilmIframe');
+
+  function loadFilm(){
+    frame.src='https://www.youtube.com/embed/'+filmIds[filmIndex]+'?rel=0&playsinline=1';
+  }
+  function closeFilm(){
+    clean.classList.remove('visible');
+    clean.setAttribute('aria-hidden','true');
+    frame.src='';
+  }
+  function openFilm(){
+    clean.classList.add('visible');
+    clean.setAttribute('aria-hidden','false');
+    loadFilm();
+  }
+
+  if(filmNav){
+    filmNav.addEventListener('click',function(){
+      // Run after the site's existing nav toggle so page-active is final.
+      setTimeout(function(){
+        filmNav.classList.contains('page-active') ? openFilm() : closeFilm();
+      },0);
+    });
+  }
+  if(journalNav) journalNav.addEventListener('click',closeFilm);
+
+  document.getElementById('cleanFilmNext').addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    filmIndex=(filmIndex+1)%filmIds.length;loadFilm();
+  });
+  document.getElementById('cleanFilmPrev').addEventListener('click',function(e){
+    e.preventDefault();e.stopPropagation();
+    filmIndex=(filmIndex-1+filmIds.length)%filmIds.length;loadFilm();
+  });
+
+  // Other nav items close Film immediately.
+  document.querySelectorAll('.header .navitem').forEach(function(item){
+    if(item!==filmNav)item.addEventListener('click',closeFilm);
+  });
 })();
 
 </script>
